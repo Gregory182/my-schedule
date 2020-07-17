@@ -1,25 +1,68 @@
 import React from 'react';
-import logo from './logo.svg';
+import {
+  Route,
+  BrowserRouter as Router,
+} from 'react-router-dom';
 import './App.css';
+
+import MyDays from './pages/MyDays';
+
+import styled from 'styled-components';
+import Navbar from './components/Navbar';
+import Login from './pages/Login';
+import SignIn from './pages/SignIn';
+
+import PrivateRoute from './components/hoc/PrivateRoute';
+import { AuthProvider } from './components/Auth';
+
+const MainWrapper = styled.section`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  /* max-width: 1200px; */
+  margin: 0 auto;
+`;
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <MainWrapper>
+      <AuthProvider>
+        <Router>
+          <Navbar  />
+
+          <PrivateRoute
+            path="/schedule"
+            component={MyDays}
+          />
+          <Route exact path="/"  component={Login} />
+          <Route exact path="/register"  component={SignIn} />
+
+        </Router>
+      </AuthProvider>
+    </MainWrapper>
+
+    // <div className="App">
+    //   <main className="flexbox">
+    //     {/* <h1>Willkomen</h1> */}
+    //     <MyDays/>
+
+    //     {/* <Board id="board-1" className="board">
+    //       <Card id="card-1" className="card" draggable="true">
+    //         <p>Card One</p>
+    //       </Card>
+    //     </Board>
+    //     <Board id="board-2" className="board">
+    //       <Card id="card-2" className="card" draggable="true">
+    //         <p>Card two</p>
+    //       </Card>
+    //       <Card id="card-3" className="card" draggable="true">
+    //         <p>Card three</p>
+    //       </Card>
+    //     </Board> */}
+    //   </main>
+    // </div>
   );
 }
 
