@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { AuthContext } from './Auth';
 import { auth } from '../services/firebase';
@@ -9,22 +10,30 @@ const Nav = styled.nav`
   width: 100%;
   margin-bottom: 2rem;
 
-  .container {
-    width: 95%;
+  .nav-container {
+    width: 100%;
     height: 100%;
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content:center;
+    padding: 0px 50px;
+    
+    .left{
+      flex:2;
+    }
+    .right{
+      flex:1;
+    }
 
     .link {
       text-decoration: none;
       padding: 0.5rem 1.2rem;
       color: black;
-      border: 1px solid #666;
+      /* border: 1px solid #666; */
       border-radius: 5px;
-      box-shadow: -1px 2px 13px 0px rgba(0, 0, 0, 0.2);
+      box-shadow: -3px 6px 13px 0px rgba(0, 0, 0, 0.1);
       transition: 0.2s;
-      cursor:pointer;
+      cursor: pointer;
 
       :hover {
         background-color: #666;
@@ -41,23 +50,27 @@ const Navbar = () => {
     localStorage.setItem('isAuth', false);
   };
 
-
   const { testUser } = useContext(AuthContext);
-  console.log(testUser)
+  console.log(testUser);
   return (
     <Nav>
-      <div className="container">
-        {/* <Link to="/" className="link">
-           {loggedUser}: Prośby
-        </Link> */}
-
-        {!!testUser ? (
-          <div className="link" onClick={() => logout()}>
-            Wyloguj {testUser.firstName}
-          </div>
-        ) : (
-          ''
+      <div className='nav-container'>
+        <div className="left">
+        {testUser && testUser.roles.creator === true && (
+          <>
+              <Link to='/create-schedule' className='link'>
+                Tworzenie grafiku
+              </Link>
+          </>
         )}
+        </div>
+        <div className="right">
+          {testUser && (
+            <div className='link' onClick={() => logout()}>
+              Wyloguj {testUser.firstName}
+            </div>)}
+        </div>
+
 
 
       </div>

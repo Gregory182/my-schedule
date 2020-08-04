@@ -1,4 +1,4 @@
-import React, {useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const ModalDiv = styled.div`
@@ -20,17 +20,14 @@ const ModalDiv = styled.div`
     width: 100%;
     height: 100%;
   }
-
-
 `;
 
 const Button = styled.button`
-  opacity: ${(props) => props.test === "Dyżur" ? 1 : 0.5};
+  opacity: ${(props) => (props.test === 'Dyżur' ? 1 : 0.5)};
 `;
 const Button2 = styled.button`
-  opacity: ${(props) => props.test === "Wolne" ? 1 : 0.5};
+  opacity: ${(props) => (props.test === 'Wolne' ? 1 : 0.5)};
 `;
-
 
 const ModalForm = styled.div`
   width: 300px;
@@ -47,11 +44,10 @@ const ModalForm = styled.div`
   /* padding:5px; */
   .btn {
     padding: 5px 12px;
-    border:0;
-    border-radius:5px;
+    border: 0;
+    border-radius: 5px;
     background-color: lightgreen;
-    cursor:pointer;
-
+    cursor: pointer;
   }
 
   & .header {
@@ -126,50 +122,58 @@ const ModalForm = styled.div`
     height: 3rem;
     background-color: lightgreen;
     opacity: 1;
-    cursor:pointer;
-    .spn{
+    cursor: pointer;
+    .spn {
       transition: all 0.2s;
-
     }
-    
+
     :hover > .spn {
-      transform: scale(1.2)
+      transform: scale(1.2);
     }
   }
 `;
 
 const Modal = ({ onClose, onSave, date, choseType, chosen }) => {
-
   // const [requestedType, setrequestedType] = useState(chosen.requestType);
 
-  console.log(chosen.requestType)
+  console.log(chosen.requestType);
 
   return (
     <ModalDiv>
       <ModalForm>
-        <div className="header">
+        <div className='header'>
           <div>Dodaj prośbe</div>
-          <div className="close-modal" onClick={onClose}></div>
+          <div className='close-modal' onClick={onClose}></div>
         </div>
-        <div className="body">
-          <div className="chosen"> Prośba na dzień: {date}</div>
+        <div className='body'>
+          <div className='chosen'> Prośba na dzień: {date}</div>
           <p>{chosen.requestType}</p>
-          <div className="options">
-            <Button onClick={choseType} data-type="Dyżur" test={chosen.requestType} className="btn">
+          <div className='options'>
+            <Button
+              onClick={choseType}
+              data-type='Dyżur'
+              test={chosen.requestType}
+              className='btn'
+            >
               CHCĘ DYŻUR
             </Button>
-            <Button2 className="btn" onClick={choseType} data-type="Wolne" test={chosen.requestType}>
+            <Button2
+              className='btn'
+              onClick={choseType}
+              data-type='Wolne'
+              test={chosen.requestType}
+            >
               CHCĘ WOLNE
-            </Button2> 
+            </Button2>
           </div>
         </div>
-        <div className="fotter">
-          <button className="save-btn" onClick={onSave}>
-            <div className="spn">ZAPISZ</div>
+        <div className='fotter'>
+          <button className='save-btn' onClick={onSave}>
+            <div className='spn'>ZAPISZ</div>
           </button>
         </div>
       </ModalForm>
-      <div className="background" onMouseDown={onClose}></div>
+      <div className='background' onMouseDown={onClose}></div>
     </ModalDiv>
   );
 };

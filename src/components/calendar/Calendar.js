@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import 'moment/locale/pl';
 import moment from 'moment';
+import 'moment/locale/pl';
 import { v4 as uuidv4 } from 'uuid';
 import styled from 'styled-components';
 import CalendarBoard from './CalendarBoard';
@@ -10,6 +10,8 @@ import Modal from '../Modal';
 import Spinner from '../Spinner';
 import { firestore } from '../../services/firebase';
 import { AuthContext } from '../Auth';
+
+import { weekDays, monthDays } from '../../services/calendarUtils';
 
 const NavigationDiv = styled.div`
   display: flex;
@@ -58,10 +60,7 @@ const Calendar = () => {
     requestType: '',
   });
 
-  const weekDays = ['Pon', 'Wt', 'Śr', 'Czw', 'Pt', 'Sb', 'Nd'] //moment.weekdaysShort();
-  const daysIn = mom.daysInMonth();
-  const emptyCells = [];
-  const monthCells = [];
+  const calendarDays = monthDays(mom).fullData;
 
   useEffect(() => {
     if (testUser) getData();
@@ -89,92 +88,61 @@ const Calendar = () => {
       .where('user_id', '==', testUser.id)
       .get();
 
-    
-    let id = !!data.docs[0] ?  data.docs[0].id : null;
-    setDateId(id)
+    let id = !!data.docs[0] ? data.docs[0].id : null;
+    setDateId(id);
     return data.docs.length > 0 ? data.docs[0].data() : null;
   };
 
   const setMonth = (nexMonth) => {
     let newMom = moment().set('month', mom.month() + nexMonth);
+    console.log(newMom)
     setMom(newMom);
   };
 
-  // DEFINE FIRST DAY OF MONTH
-  const startOfMonth = () => {
-    let dateObject = mom;
-    let firstDay = moment(dateObject).startOf('month').format('d');
-    return firstDay;
-  };
-
-  // ADD DAY TO LIST
-
   const onAddDay = async () => {
     setIsLoading(true);
-    if(dateId === null){
+    if (dateId === null) {
       await firestore.collection('requestedDates').add(myRequest);
-      
-    }else {
+    } else {
       await firestore.collection('requestedDates').doc(dateId).set(myRequest);
       getData();
     }
 
     //TODO czy po aktualizacji w bazie manualnie ruszac state czy wywołać funkcję, getData(), która po pobraniu z bazy ustawia state
-    setMyDays(myDays => ([...myDays, { ...myRequest }])); 
+    setMyDays((myDays) => [...myDays, { ...myRequest }]);
 
     closeModal();
     setIsLoading(false);
   };
 
-
-  //EMPTY CELLS
-  for (let i = 1; i < startOfMonth(); i++) {
-    emptyCells.push(
-      <div key={uuidv4()} className="cell cell-empty">
-        <div className="month-before"> </div>
-      </div>
-    );
-  }
-
-
   //CHANGE TYPE OF REQUEST
   const choseRequestType = (e) => {
     let type = e.target.dataset.type;
     setMyRequest({ ...myRequest, requestType: type });
-  };
+  }; 
 
-
-  //DAY CELLS
-  for (let i = 1; i <= daysIn; i++) {
-    const calDate = moment()
-      .set({ date: i, month: mom.month(), year: mom.year() })
-      .format('yyyy-MM-DD');
-    let dd = myDays.find((day) => day.date === calDate);
-
-    let requestedType = dd ? dd.requestType : '';
-
-    monthCells.push(
-      <Day
-        key={uuidv4()}
-        showModal={() => toggleModal(calDate)}
-        dayNumber={i}
-        requestType={requestedType}
-        data-data={calDate}
-      ></Day>
-    );
-  }
-
-
-  const mergedCells = [...emptyCells, ...monthCells];
 
   const weekdaysNames = weekDays.map((day) => {
     return (
-      <div className="day-name" key={day}>
+      <div className='day-name' key={day}>
         <span>{day}</span>
       </div>
     );
   });
 
+  const mergedCells = calendarDays.map(({ dayOfWeek, date, classs }) => {
+    let myDate = myDays.find( day => day.date === date)
+    let requestedType = myDate ? myDate.requestType : '';
+    return (
+      <Day
+        key={uuidv4()}
+        showModal={() => toggleModal(date)}
+        dayNumber={dayOfWeek}
+        requestType={requestedType}
+        style={classs}
+      ></Day>
+    );
+  });
 
   const toggleModal = async (date) => {
     const tt = await getOneDay(date);

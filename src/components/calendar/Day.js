@@ -8,15 +8,26 @@ const DayDiv = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  background-color: #fff;
+  background-color: ${(props)=> props.c==='prev-month' ? '#ddd' : '#fff'} ;
+  border-bottom:1px solid #ddd;
   cursor: pointer;
+  /* transition:all  0.2s ease-in-out; */
+
+  :hover > .day-number {
+    transform:scale(1.1);
+  }
+  :hover  {
+    border-left:1px solid #ddd;
+    border-right:1px solid #ddd;
+  }
+  
 
   & .day-number {
     padding-top: 6px;
   }
 
   & .bar {
-    width: 100%;
+    width: 98%;
     margin: 3px 2px;
     font-size: 0.8rem;
     text-align: center;
@@ -34,17 +45,17 @@ const DayDiv = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 40px;
+    height: 50px;
     background-color: #555;
     color: #fff;
   }
   /* /* #ECEFF1 */
 `;
 
-const Day = ({ showModal, dayNumber, requestType }) => {
+const Day = ({ showModal, dayNumber, requestType, style }) => {
   return (
-    <DayDiv onClick={showModal}>
-      <div className="day-number">{dayNumber}</div>
+    <DayDiv onClick={showModal} c={style} >
+      <div className='day-number'>{dayNumber}</div>
       <div className={`bar ${requestType}`}>{requestType}</div>
     </DayDiv>
   );

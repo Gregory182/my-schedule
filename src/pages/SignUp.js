@@ -7,7 +7,7 @@ import { auth, firestore } from '../services/firebase';
 import { AuthContext } from '../components/Auth';
 
 
-const SignIn = () => {
+const SignUp = () => {
   const history = useHistory();
 
   const [user, setUser] = useState({
@@ -21,7 +21,7 @@ const SignIn = () => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
-  const signIn = async (e) => {
+  const signUp = async (e) => {
     e.preventDefault();
     try {
       const newUser = await auth().createUserWithEmailAndPassword(user.email, user.password);
@@ -29,7 +29,8 @@ const SignIn = () => {
         id: newUser.user.uid,
         firstName: user.firstName,
         lastName: user.lastName,
-        email: user.email
+        email: user.email,
+        roles:  {user : true, creator:false, admin:false}
       }
       console.log(newUser.user.uid)
       await firestore.collection('users').add(userData)
@@ -50,7 +51,7 @@ const SignIn = () => {
   return (
     <LoginForm>
       <h2>Zarejestruj się</h2>
-      <form onSubmit={(e) => signIn(e)}>
+      <form onSubmit={(e) => signUp(e)}>
         <div className="form">
           <Input
             name="email"
@@ -87,4 +88,4 @@ const SignIn = () => {
   );
 };
 
-export default withRouter(SignIn);
+export default withRouter(SignUp);

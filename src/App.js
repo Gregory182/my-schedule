@@ -10,10 +10,11 @@ import MyDays from './pages/MyDays';
 import styled from 'styled-components';
 import Navbar from './components/Navbar';
 import Login from './pages/Login';
-import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
 
 import PrivateRoute from './components/hoc/PrivateRoute';
 import { AuthProvider } from './components/Auth';
+import ScheduleCreation from './pages/ScheduleCreation';
 
 const MainWrapper = styled.section`
   display: flex;
@@ -32,13 +33,10 @@ function App() {
         <Router>
           <Navbar  />
 
-          <PrivateRoute
-            path="/schedule"
-            component={MyDays}
-          />
+          <PrivateRoute path="/schedule" component={MyDays}/>
           <Route exact path="/"  component={Login} />
-          <Route exact path="/register"  component={SignIn} />
-
+          <Route exact path="/register"  component={SignUp} />
+          <PrivateRoute path="/create-schedule" component={ ScheduleCreation }/>
         </Router>
       </AuthProvider>
     </MainWrapper>

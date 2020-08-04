@@ -8,7 +8,8 @@ const CalendarForm = styled.div`
   background-color: #ECEFF1;
   justify-items: stretch;
   align-content: space-between;
-  grid-gap: 3px;
+  
+  /* grid-gap: 3px; */
 
   .day-name{
     color:#fff;
